@@ -65,14 +65,4 @@ matrix:
 before_install:
   - eval "${MATRIX_EVAL}"
 script:
-  - mkdir -p build/debug && cd build/debug
-  - cmake -DCMAKE_BUILD_TYPE=Debug ../..
-  - cmake --build . -- -j8
-  - ctest --verbose
-  - cd ../..
-  - mkdir -p build/release && cd build/release
-  - cmake -DCMAKE_BUILD_TYPE=Release ../..
-  - cmake --build . -- -j8
-  - ctest --verbose
-  - cd ../..
-  
+  - ./scripts/build_all.sh

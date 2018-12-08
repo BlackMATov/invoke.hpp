@@ -184,6 +184,36 @@ namespace invoke_hpp
 }
 
 //
+// is_invocable
+//
+
+namespace invoke_hpp
+{
+    namespace impl
+    {
+        struct is_invocable_r_impl_tag {};
+
+        template < typename Void, typename R, typename F, typename... Args >
+        struct is_invocable_r_impl
+        : std::false_type {};
+
+        template < typename R, typename F, typename... Args >
+        struct is_invocable_r_impl<void_t<is_invocable_r_impl_tag, invoke_result_t<F, Args...>>, R, F, Args...>
+        : std::conditional_t<
+            std::is_void<R>::value,
+            std::true_type,
+            std::is_convertible<invoke_result_t<F, Args...>, R>> {};
+    }
+
+    template < typename R, typename F, typename... Args >
+    struct is_invocable_r
+    : impl::is_invocable_r_impl<void, R, F, Args...> {};
+
+    template < typename F, typename... Args >
+    using is_invocable = is_invocable_r<void, F, Args...>;
+}
+
+//
 // apply
 //
 

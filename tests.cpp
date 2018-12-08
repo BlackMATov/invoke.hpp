@@ -298,6 +298,166 @@ TEST_CASE("is_invocable"){
     }
 }
 
+TEST_CASE("is_invocable_r"){
+    SECTION("is_invocable_r_functions"){
+        static_assert(
+            inv::is_invocable_r<void, decltype(simple_static_function)>::value,
+            "unit test fail");
+        static_assert(
+            inv::is_invocable_r<int, decltype(simple_static_function_r)>::value,
+            "unit test fail");
+        static_assert(
+            inv::is_invocable_r<void, decltype(simple_static_function_r)>::value,
+            "unit test fail");
+        static_assert(
+            inv::is_invocable_r<const int&, decltype(simple_static_function_r_with_arg), const int&>::value,
+            "unit test fail");
+    }
+    SECTION("is_not_invocable_r_functions"){
+        static_assert(
+            !inv::is_invocable_r<void, decltype(simple_static_function), int>::value,
+            "unit test fail");
+        static_assert(
+            !inv::is_invocable_r<int, decltype(simple_static_function_r), obj_t>::value,
+            "unit test fail");
+        static_assert(
+            !inv::is_invocable_r<const int&, decltype(simple_static_function_r_with_arg), const obj2_t&>::value,
+            "unit test fail");
+
+        static_assert(
+            !inv::is_invocable_r<int, decltype(simple_static_function)>::value,
+            "unit test fail");
+        static_assert(
+            !inv::is_invocable_r<int*, decltype(simple_static_function_r)>::value,
+            "unit test fail");
+        static_assert(
+            !inv::is_invocable_r<obj_t, decltype(simple_static_function_r_with_arg), const int&>::value,
+            "unit test fail");
+    }
+    SECTION("is_invocable_r_members"){
+        static_assert(
+            inv::is_invocable_r<void, decltype(&obj_t::member), obj_t>::value,
+            "unit test fail");
+        static_assert(
+            inv::is_invocable_r<void, decltype(&obj_t::member), obj_t*>::value,
+            "unit test fail");
+        static_assert(
+            inv::is_invocable_r<void, decltype(&obj_t::member), std::reference_wrapper<obj_t>>::value,
+            "unit test fail");
+
+        static_assert(
+            inv::is_invocable_r<int, decltype(&obj_t::member_r), obj_t>::value,
+            "unit test fail");
+        static_assert(
+            inv::is_invocable_r<int, decltype(&obj_t::member_r), obj_t*>::value,
+            "unit test fail");
+        static_assert(
+            inv::is_invocable_r<int, decltype(&obj_t::member_r), std::reference_wrapper<obj_t>>::value,
+            "unit test fail");
+        static_assert(
+            inv::is_invocable_r<void, decltype(&obj_t::member_r), std::reference_wrapper<obj_t>>::value,
+            "unit test fail");
+
+        static_assert(
+            inv::is_invocable_r<int, decltype(&obj_t::member_r_with_arg), obj_t, int>::value,
+            "unit test fail");
+        static_assert(
+            inv::is_invocable_r<int, decltype(&obj_t::member_r_with_arg), obj_t*, int>::value,
+            "unit test fail");
+        static_assert(
+            inv::is_invocable_r<int, decltype(&obj_t::member_r_with_arg), std::reference_wrapper<obj_t>, int>::value,
+            "unit test fail");
+        static_assert(
+            inv::is_invocable_r<void, decltype(&obj_t::member_r_with_arg), std::reference_wrapper<obj_t>, int>::value,
+            "unit test fail");
+    }
+    SECTION("is_not_invocable_r_members"){
+        static_assert(
+            !inv::is_invocable_r<int, decltype(&obj_t::member), obj_t>::value,
+            "unit test fail");
+        static_assert(
+            !inv::is_invocable_r<int*, decltype(&obj_t::member), obj_t*>::value,
+            "unit test fail");
+        static_assert(
+            !inv::is_invocable_r<obj_t, decltype(&obj_t::member), std::reference_wrapper<obj_t>>::value,
+            "unit test fail");
+
+        static_assert(
+            !inv::is_invocable_r<obj_t, decltype(&obj_t::member_r), obj_t>::value,
+            "unit test fail");
+        static_assert(
+            !inv::is_invocable_r<int*, decltype(&obj_t::member_r), obj_t*>::value,
+            "unit test fail");
+        static_assert(
+            !inv::is_invocable_r<int, decltype(&obj_t::member_r), std::reference_wrapper<obj2_t>>::value,
+            "unit test fail");
+
+        static_assert(
+            !inv::is_invocable_r<obj_t, decltype(&obj_t::member_r_with_arg), obj_t, int>::value,
+            "unit test fail");
+        static_assert(
+            !inv::is_invocable_r<int*, decltype(&obj_t::member_r_with_arg), obj_t*, int>::value,
+            "unit test fail");
+        static_assert(
+            !inv::is_invocable_r<int, decltype(&obj_t::member_r_with_arg), std::reference_wrapper<obj_t>, obj2_t>::value,
+            "unit test fail");
+    }
+    SECTION("is_invocable_r_objects"){
+        static_assert(
+            inv::is_invocable_r<int, decltype(&obj_t::value), obj_t>::value,
+            "unit test fail");
+        static_assert(
+            inv::is_invocable_r<int, decltype(&obj_t::value), obj_t*>::value,
+            "unit test fail");
+        static_assert(
+            inv::is_invocable_r<int, decltype(&obj_t::value), std::reference_wrapper<obj_t>>::value,
+            "unit test fail");
+        static_assert(
+            inv::is_invocable_r<void, decltype(&obj_t::value), std::reference_wrapper<obj_t>>::value,
+            "unit test fail");
+
+        static_assert(
+            inv::is_invocable_r<int, decltype(&obj_t::value_c), obj_t>::value,
+            "unit test fail");
+        static_assert(
+            inv::is_invocable_r<int, decltype(&obj_t::value_c), obj_t*>::value,
+            "unit test fail");
+        static_assert(
+            inv::is_invocable_r<int, decltype(&obj_t::value_c), std::reference_wrapper<obj_t>>::value,
+            "unit test fail");
+        static_assert(
+            inv::is_invocable_r<void, decltype(&obj_t::value_c), std::reference_wrapper<obj_t>>::value,
+            "unit test fail");
+    }
+    SECTION("is_not_invocable_r_objects"){
+        static_assert(
+            !inv::is_invocable_r<obj_t, decltype(&obj_t::value), obj_t>::value,
+            "unit test fail");
+        static_assert(
+            !inv::is_invocable_r<int*, decltype(&obj_t::value), obj_t*>::value,
+            "unit test fail");
+        static_assert(
+            !inv::is_invocable_r<int, decltype(&obj_t::value), std::reference_wrapper<obj_t>, obj2_t>::value,
+            "unit test fail");
+        static_assert(
+            !inv::is_invocable_r<void, decltype(&obj_t::value), std::reference_wrapper<obj_t>, obj2_t>::value,
+            "unit test fail");
+
+        static_assert(
+            !inv::is_invocable_r<obj_t, decltype(&obj_t::value_c), obj_t>::value,
+            "unit test fail");
+        static_assert(
+            !inv::is_invocable_r<int*, decltype(&obj_t::value_c), obj_t*>::value,
+            "unit test fail");
+        static_assert(
+            !inv::is_invocable_r<obj2_t, decltype(&obj_t::value_c), std::reference_wrapper<obj_t>>::value,
+            "unit test fail");
+        static_assert(
+            !inv::is_invocable_r<void, decltype(&obj_t::value_c), std::reference_wrapper<obj_t**>>::value,
+            "unit test fail");
+    }
+}
+
 TEST_CASE("apply"){
     SECTION("apply_functions"){
         inv::apply(simple_static_function, std::make_tuple());

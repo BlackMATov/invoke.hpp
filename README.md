@@ -34,18 +34,26 @@
 
 ### `invoke_hpp::invoke(F&& f, Args&&... args)`
 
-Analog of [std::invoke](https://en.cppreference.com/w/cpp/utility/functional/invoke) from C++17
+Analog of [`std::invoke`](https://en.cppreference.com/w/cpp/utility/functional/invoke) from C++17
 
 ### `invoke_hpp::invoke_result<F, Args...>`
 
-Analog of [std::invoke_result](https://en.cppreference.com/w/cpp/types/result_of) from C++17
+Analog of [`std::invoke_result`](https://en.cppreference.com/w/cpp/types/result_of) from C++17
+
+### `invoke_hpp::invoke_result_t<F, Args...>`
+
+Analog of [`std::invoke_result_t`](https://en.cppreference.com/w/cpp/types/result_of) from C++17
 
 ### `invoke_hpp::is_invocable<F, Args...>`
 
-Analog of [std::is_invocable](https://en.cppreference.com/w/cpp/types/is_invocable) from C++17
+Analog of [`std::is_invocable`](https://en.cppreference.com/w/cpp/types/is_invocable) from C++17
+
+### `invoke_hpp::is_invocable_r<R, F, Args...>`
+
+Analog of [`std::is_invocable_r`](https://en.cppreference.com/w/cpp/types/is_invocable) from C++17
 
 ### `invoke_hpp::apply(F&& f, Tuple&& args)`
 
-Analog of [std::apply](https://en.cppreference.com/w/cpp/utility/apply) from C++17
+Analog of [`std::apply`](https://en.cppreference.com/w/cpp/utility/apply) from C++17
 
 ## [License (MIT)](./LICENSE.md)

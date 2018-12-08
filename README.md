@@ -40,6 +40,10 @@ Analog of [std::invoke](https://en.cppreference.com/w/cpp/utility/functional/inv
 
 Analog of [std::invoke_result](https://en.cppreference.com/w/cpp/types/result_of) from C++17
 
+### `invoke_hpp::is_invocable<F, Args...>`
+
+Analog of [std::is_invocable](https://en.cppreference.com/w/cpp/types/is_invocable) from C++17
+
 ### `invoke_hpp::apply(F&& f, Tuple&& args)`
 
 Analog of [std::apply](https://en.cppreference.com/w/cpp/utility/apply) from C++17

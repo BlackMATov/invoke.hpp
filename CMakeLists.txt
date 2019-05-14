@@ -1,43 +1,20 @@
-cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
-project(invoke)
+# 3.8 version is required for `cxx_std_14`
+cmake_minimum_required(VERSION 3.8 FATAL_ERROR)
 
-#
-# coverage mode
-#
-
-option(INVOKE_BUILD_WITH_COVERAGE "Build with coverage" OFF)
-if(INVOKE_BUILD_WITH_COVERAGE AND (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang"))
-    add_definitions(-DINVOKE_BUILD_WITH_COVERAGE)
-    set(INVOKE_COVERAGE_FLAGS "--coverage")
-    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} ${INVOKE_COVERAGE_FLAGS}")
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${INVOKE_COVERAGE_FLAGS}")
-    set(CMAKE_LINKER_FLAGS_DEBUG "${CMAKE_LINKER_FLAGS_DEBUG} ${INVOKE_COVERAGE_FLAGS}")
+if(NOT DEFINED PROJECT_NAME)
+    set(BUILD_AS_STANDALONE ON)
 endif()
 
-#
-# sanitizer mode
-#
+project(invoke.hpp)
 
-option(INVOKE_BUILD_WITH_SANITIZER "Build with sanitizer" OFF)
-if(INVOKE_BUILD_WITH_SANITIZER AND (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang"))
-    add_definitions(-DINVOKE_BUILD_WITH_SANITIZER)
-    set(INVOKE_SANITIZER_FLAGS "-fno-omit-frame-pointer -fsanitize=address")
-    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} ${INVOKE_SANITIZER_FLAGS}")
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${INVOKE_SANITIZER_FLAGS}")
-    set(CMAKE_LINKER_FLAGS_DEBUG "${CMAKE_LINKER_FLAGS_DEBUG} ${INVOKE_SANITIZER_FLAGS}")
+add_library(${PROJECT_NAME} INTERFACE)
+target_include_directories(${PROJECT_NAME} INTERFACE headers)
+target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_14)
+
+if(BUILD_AS_STANDALONE)
+    option(BUILD_WITH_UNTESTS "Build with unit tests" ON)
+    if(BUILD_WITH_UNTESTS)
+        enable_testing()
+        add_subdirectory(untests)
+    endif()
 endif()
-
-#
-# tests executable
-#
-
-file(GLOB test_sources "*.cpp" "*.hpp")
-add_executable(${PROJECT_NAME} ${test_sources})
-
-set_target_properties(${PROJECT_NAME} PROPERTIES
-    CXX_STANDARD 14
-    CXX_STANDARD_REQUIRED YES
-    CXX_EXTENSIONS NO)
-
-enable_testing()
-add_test(${PROJECT_NAME} ${PROJECT_NAME})

@@ -27,10 +27,17 @@
 
 ## Installation
 
-[invoke.hpp][invoke] is a single header library. All you need to do is copy the header file into your project and include this file:
+[invoke.hpp][invoke] is a header-only library. All you need to do is copy the headers files from `headers` directory into your project and include them:
 
 ```cpp
-#include "invoke.hpp"
+#include "invoke.hpp/invoke.hpp"
+```
+
+Also, you can add the root repository directory to your [cmake](https://cmake.org) project:
+
+```cmake
+add_subdirectory(external/invoke.hpp)
+target_link_libraries(your_project_target invoke.hpp)
 ```
 
 ## API

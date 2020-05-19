@@ -1,6 +1,6 @@
 # invoke.hpp
 
-> std::invoke/std::apply analogs for C++14
+> std::invoke/std::apply analogs for C++11/14
 
 [![travis][badge.travis]][travis]
 [![appveyor][badge.appveyor]][appveyor]
@@ -12,14 +12,14 @@
 [badge.travis]: https://img.shields.io/travis/BlackMATov/invoke.hpp/master.svg?logo=travis
 [badge.appveyor]: https://img.shields.io/appveyor/ci/BlackMATov/invoke-hpp/master.svg?logo=appveyor
 [badge.codecov]: https://img.shields.io/codecov/c/github/BlackMATov/invoke.hpp/master.svg?logo=codecov
-[badge.language]: https://img.shields.io/badge/language-C%2B%2B14-red.svg
+[badge.language]: https://img.shields.io/badge/language-C%2B%2B11-red.svg
 [badge.license]: https://img.shields.io/badge/license-MIT-blue.svg
 [badge.paypal]: https://img.shields.io/badge/donate-PayPal-orange.svg?logo=paypal&colorA=00457C
 
 [travis]: https://travis-ci.org/BlackMATov/invoke.hpp
 [appveyor]: https://ci.appveyor.com/project/BlackMATov/invoke-hpp
 [codecov]: https://codecov.io/gh/BlackMATov/invoke.hpp
-[language]: https://en.wikipedia.org/wiki/C%2B%2B14
+[language]: https://en.wikipedia.org/wiki/C%2B%2B11
 [license]: https://en.wikipedia.org/wiki/MIT_License
 [paypal]: https://www.paypal.me/matov
 

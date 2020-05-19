@@ -1,4 +1,4 @@
-# 3.8 version is required for `cxx_std_14`
+# 3.8 version is required for `cxx_std_11`
 cmake_minimum_required(VERSION 3.8 FATAL_ERROR)
 
 if(NOT DEFINED PROJECT_NAME)
@@ -8,7 +8,7 @@ endif()
 project(invoke.hpp)
 
 add_library(${PROJECT_NAME} INTERFACE)
-target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_14)
+target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_11)
 target_include_directories(${PROJECT_NAME} INTERFACE headers)
 
 if(BUILD_AS_STANDALONE)

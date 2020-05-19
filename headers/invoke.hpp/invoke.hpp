@@ -271,3 +271,7 @@ namespace invoke_hpp
             std::forward<Tuple>(args),
             impl::make_index_sequence<std::tuple_size<typename std::decay<Tuple>::type>::value>()))
 }
+
+
+#undef INVOKE_HPP_NOEXCEPT_RETURN
+#undef INVOKE_HPP_NOEXCEPT_DECLTYPE_RETURN

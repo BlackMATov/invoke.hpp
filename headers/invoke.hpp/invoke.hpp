@@ -11,9 +11,6 @@
 #include <functional>
 #include <type_traits>
 
-#define INVOKE_HPP_NOEXCEPT_RETURN(...) \
-    noexcept(noexcept(__VA_ARGS__)) { return __VA_ARGS__; }
-
 #define INVOKE_HPP_NOEXCEPT_DECLTYPE_RETURN(...) \
     noexcept(noexcept(__VA_ARGS__)) -> decltype (__VA_ARGS__) { return __VA_ARGS__; }
 
@@ -33,6 +30,42 @@ namespace invoke_hpp
 
     template < typename... Args >
     using void_t = typename impl::make_void<Args...>::type;
+}
+
+//
+// integer_sequence
+//
+
+namespace invoke_hpp
+{
+    template < typename T, T... Ints >
+    struct integer_sequence {
+        using value_type = T;
+        static constexpr std::size_t size() noexcept { return sizeof...(Ints); }
+    };
+
+    template < std::size_t... Ints >
+    using index_sequence = integer_sequence<std::size_t, Ints...>;
+
+    namespace impl
+    {
+        template < typename T, std::size_t N, T... Ints >
+        struct make_integer_sequence_impl
+        : make_integer_sequence_impl<T, N - 1, N - 1, Ints...> {};
+
+        template < typename T, T... Ints >
+        struct make_integer_sequence_impl<T, 0, Ints...>
+        : integer_sequence<T, Ints...> {};
+    }
+
+    template < typename T, std::size_t N >
+    using make_integer_sequence = impl::make_integer_sequence_impl<T, N>;
+
+    template < std::size_t N >
+    using make_index_sequence = make_integer_sequence<std::size_t, N>;
+
+    template < typename... Ts >
+    using index_sequence_for = make_index_sequence<sizeof...(Ts)>;
 }
 
 //
@@ -227,36 +260,8 @@ namespace invoke_hpp
 {
     namespace impl
     {
-        template<typename T, T... Ints>
-        struct integer_sequence
-        {
-            typedef T value_type;
-            static constexpr std::size_t size() { return sizeof...(Ints); }
-        };
-
-        template<std::size_t... Ints>
-        using index_sequence = integer_sequence<std::size_t, Ints...>;
-
-        template<typename T, std::size_t N, T... Is>
-        struct make_integer_sequence : make_integer_sequence<T, N-1, N-1, Is...> {};
-
-        template<typename T, T... Is>
-        struct make_integer_sequence<T, 0, Is...> : integer_sequence<T, Is...> {};
-
-        template<std::size_t N>
-        using make_index_sequence = make_integer_sequence<std::size_t, N>;
-
-        template<typename... T>
-        using index_sequence_for = make_index_sequence<sizeof...(T)>;
-    }
-}
-
-namespace invoke_hpp
-{
-    namespace impl
-    {
         template < typename F, typename Tuple, std::size_t... I >
-        constexpr auto apply_impl(F&& f, Tuple&& args, impl::index_sequence<I...>)
+        constexpr auto apply_impl(F&& f, Tuple&& args, index_sequence<I...>)
         INVOKE_HPP_NOEXCEPT_DECLTYPE_RETURN(
             invoke_hpp::invoke(
                 std::forward<F>(f),
@@ -269,9 +274,7 @@ namespace invoke_hpp
         impl::apply_impl(
             std::forward<F>(f),
             std::forward<Tuple>(args),
-            impl::make_index_sequence<std::tuple_size<typename std::decay<Tuple>::type>::value>()))
+            make_index_sequence<std::tuple_size<typename std::decay<Tuple>::type>::value>()))
 }
 
-
-#undef INVOKE_HPP_NOEXCEPT_RETURN
 #undef INVOKE_HPP_NOEXCEPT_DECLTYPE_RETURN

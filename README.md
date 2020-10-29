@@ -9,9 +9,9 @@
 [![license][badge.license]][license]
 [![paypal][badge.paypal]][paypal]
 
-[badge.travis]: https://img.shields.io/travis/BlackMATov/invoke.hpp/master.svg?logo=travis
-[badge.appveyor]: https://img.shields.io/appveyor/ci/BlackMATov/invoke-hpp/master.svg?logo=appveyor
-[badge.codecov]: https://img.shields.io/codecov/c/github/BlackMATov/invoke.hpp/master.svg?logo=codecov
+[badge.travis]: https://img.shields.io/travis/BlackMATov/invoke.hpp/main.svg?logo=travis
+[badge.appveyor]: https://img.shields.io/appveyor/ci/BlackMATov/invoke-hpp/main.svg?logo=appveyor
+[badge.codecov]: https://img.shields.io/codecov/c/github/BlackMATov/invoke.hpp/main.svg?logo=codecov
 [badge.language]: https://img.shields.io/badge/language-C%2B%2B11-red.svg
 [badge.license]: https://img.shields.io/badge/license-MIT-blue.svg
 [badge.paypal]: https://img.shields.io/badge/donate-PayPal-orange.svg?logo=paypal&colorA=00457C
@@ -24,6 +24,12 @@
 [paypal]: https://www.paypal.me/matov
 
 [invoke]: https://github.com/BlackMATov/invoke.hpp
+
+## Requirements
+
+- [gcc](https://www.gnu.org/software/gcc/) **>= 4.9**
+- [clang](https://clang.llvm.org/) **>= 3.8**
+- [msvc](https://visualstudio.microsoft.com/) **>= 2015**
 
 ## Installation
 

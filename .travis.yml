@@ -1,159 +1,75 @@
+git:
+  depth: false
+  quiet: true
+
 language: cpp
 
-matrix:
+jobs:
   include:
 
     #
-    # windows (MSVC 2017)
-    #
-
-    - os: windows
-      stage: windows
-      name: debug, MSVC 2017, x86
-      script: ./scripts/build_debug_x86.bat
-
-    - os: windows
-      stage: windows
-      name: release, MSVC 2017, x86
-      script: ./scripts/build_release_x86.bat
-
-    - os: windows
-      stage: windows
-      name: debug, MSVC 2017, x64
-      script: ./scripts/build_debug_x64.bat
-
-    - os: windows
-      stage: windows
-      name: release, MSVC 2017, x64
-      script: ./scripts/build_release_x64.bat
-
-    #
-    # linux (g++-4.9)
+    # linux (g++)
     #
 
     - os: linux
       dist: xenial
       stage: linux
-      name: debug, g++-4.9
+      name: g++-4.9
       addons: { apt: { sources: ["ubuntu-toolchain-r-test"], packages: ["g++-4.9"] } }
       env: CC=gcc-4.9 CXX=g++-4.9
-      script: ./scripts/build_debug.sh
+      script: .ci/build_linux.sh
 
     - os: linux
       dist: xenial
       stage: linux
-      name: release, g++-4.9
-      addons: { apt: { sources: ["ubuntu-toolchain-r-test"], packages: ["g++-4.9"] } }
-      env: CC=gcc-4.9 CXX=g++-4.9
-      script: ./scripts/build_release.sh
-
-    #
-    # linux (g++-5)
-    #
-
-    - os: linux
-      dist: xenial
-      stage: linux
-      name: debug, g++-5
+      name: g++-5
       addons: { apt: { sources: ["ubuntu-toolchain-r-test"], packages: ["g++-5"] } }
       env: CC=gcc-5 CXX=g++-5
-      script: ./scripts/build_debug.sh
-
-    - os: linux
-      dist: xenial
-      stage: linux
-      name: release, g++-5
-      addons: { apt: { sources: ["ubuntu-toolchain-r-test"], packages: ["g++-5"] } }
-      env: CC=gcc-5 CXX=g++-5
-      script: ./scripts/build_release.sh
+      script: .ci/build_linux.sh
 
     #
-    # linux (clang++-3.8)
+    # linux (clang++)
     #
 
     - os: linux
       dist: xenial
       stage: linux
-      name: debug, clang++-3.8
-      addons: { apt: { sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-xenial-3.8"], packages: ["g++-4.9", "clang-3.8"] } }
+      name: clang++-3.8
+      addons: { apt: { sources: ["ubuntu-toolchain-r-test"], packages: ["clang-3.8"] } }
       env: CC=clang-3.8 CXX=clang++-3.8
-      script: ./scripts/build_debug.sh
+      script: .ci/build_linux.sh
 
     - os: linux
       dist: xenial
       stage: linux
-      name: release, clang++-3.8
-      addons: { apt: { sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-xenial-3.8"], packages: ["g++-4.9", "clang-3.8"] } }
-      env: CC=clang-3.8 CXX=clang++-3.8
-      script: ./scripts/build_release.sh
-
-    #
-    # linux (clang++-4.0)
-    #
-
-    - os: linux
-      dist: xenial
-      stage: linux
-      name: debug, clang++-4.0
-      addons: { apt: { sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-xenial-4.0"], packages: ["g++-4.9", "clang-4.0"] } }
+      name: clang++-4.0
+      addons: { apt: { sources: ["ubuntu-toolchain-r-test"], packages: ["clang-4.0"] } }
       env: CC=clang-4.0 CXX=clang++-4.0
-      script: ./scripts/build_debug.sh
-
-    - os: linux
-      dist: xenial
-      stage: linux
-      name: release, clang++-4.0
-      addons: { apt: { sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-xenial-4.0"], packages: ["g++-4.9", "clang-4.0"] } }
-      env: CC=clang-4.0 CXX=clang++-4.0
-      script: ./scripts/build_release.sh
+      script: .ci/build_linux.sh
 
     #
-    # macosx (xcode10)
+    # darwin
     #
 
     - os: osx
       osx_image: xcode10
-      stage: macosx
-      name: debug, xcode10
-      script: ./scripts/build_debug.sh
-
-    - os: osx
-      osx_image: xcode10
-      stage: macosx
-      name: release, xcode10
-      script: ./scripts/build_release.sh
-
-    #
-    # macosx (xcode11)
-    #
+      stage: darwin
+      name: xcode10
+      script: .ci/build_darwin.sh
 
     - os: osx
       osx_image: xcode11
-      stage: macosx
-      name: debug, xcode11
-      script: ./scripts/build_debug.sh
-
-    - os: osx
-      osx_image: xcode11
-      stage: macosx
-      name: release, xcode11
-      script: ./scripts/build_release.sh
+      stage: darwin
+      name: xcode11
+      script: .ci/build_darwin.sh
 
     #
     # coverage
     #
 
     - os: osx
-      osx_image: xcode11
+      osx_image: xcode10
       stage: coverage
-      name: coverage, xcode11
-      addons: { homebrew: { packages: ["lcov"] } }
-      script: ./scripts/upload_coverage.sh
-
-before_install:
-  - if [ "$TRAVIS_OS_NAME" == 'linux' ]; then
-    mkdir $HOME/cmake;
-    export PATH="$HOME/cmake/bin:$PATH";
-    travis_retry wget -q https://cmake.org/files/v3.11/cmake-3.11.4-Linux-x86_64.sh;
-    sh cmake-3.11.4-Linux-x86_64.sh --prefix=$HOME/cmake --exclude-subdir --skip-license;
-    fi
+      name: coverage
+      addons: { homebrew: { packages: ["lcov"], update: true } }
+      script: .ci/build_coverage.sh

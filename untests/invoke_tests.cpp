@@ -4,10 +4,9 @@
  * Copyright (C) 2018-2021, by Matvey Cherevko (blackmatov@gmail.com)
  ******************************************************************************/
 
-#define CATCH_CONFIG_FAST_COMPILE
-#include <catch2/catch.hpp>
-
 #include <invoke.hpp/invoke.hpp>
+#include "doctest/doctest.h"
+
 namespace inv = invoke_hpp;
 
 namespace
@@ -53,7 +52,7 @@ namespace
 }
 
 TEST_CASE("invoke"){
-    SECTION("invoke_functions"){
+    SUBCASE("invoke_functions"){
         inv::invoke(simple_static_function);
         REQUIRE(inv::invoke(simple_static_function_r) == 42);
         REQUIRE(inv::invoke(simple_static_function_r_with_arg, 42) == 42);
@@ -62,7 +61,7 @@ TEST_CASE("invoke"){
             REQUIRE(&inv::invoke(simple_static_function_r_with_ref_arg, v) == &v);
         }
     }
-    SECTION("invoke_members"){
+    SUBCASE("invoke_members"){
         obj_t o;
 
         inv::invoke(&obj_t::member, o);
@@ -84,7 +83,7 @@ TEST_CASE("invoke"){
             REQUIRE(&inv::invoke(&obj_t::member_r_with_ref_arg, std::ref(o), std::ref(v)) == &v);
         }
     }
-    SECTION("invoke_member_objects"){
+    SUBCASE("invoke_member_objects"){
         obj_t o;
 
         REQUIRE(inv::invoke(&obj_t::value, o) == 42);
@@ -98,7 +97,7 @@ TEST_CASE("invoke"){
 }
 
 TEST_CASE("invoke_result"){
-    SECTION("invoke_result_functions"){
+    SUBCASE("invoke_result_functions"){
         static_assert(
             std::is_same<
                 void,
@@ -120,7 +119,7 @@ TEST_CASE("invoke_result"){
                 inv::invoke_result_t<decltype(simple_static_function_r_with_ref_arg), const int&>>::value,
             "unit test fail");
     }
-    SECTION("invoke_result_members"){
+    SUBCASE("invoke_result_members"){
         static_assert(
             std::is_same<void,
                 inv::invoke_result_t<decltype(&obj_t::member), obj_t>>::value,
@@ -176,7 +175,7 @@ TEST_CASE("invoke_result"){
 }
 
 TEST_CASE("is_invocable"){
-    SECTION("is_invocable_functions"){
+    SUBCASE("is_invocable_functions"){
         static_assert(
             inv::is_invocable<decltype(simple_static_function)>::value,
             "unit test fail");
@@ -187,7 +186,7 @@ TEST_CASE("is_invocable"){
             inv::is_invocable<decltype(simple_static_function_r_with_arg), int>::value,
             "unit test fail");
     }
-    SECTION("is_not_invocable_functions"){
+    SUBCASE("is_not_invocable_functions"){
         static_assert(
             !inv::is_invocable<decltype(simple_static_function), int>::value,
             "unit test fail");
@@ -198,7 +197,7 @@ TEST_CASE("is_invocable"){
             !inv::is_invocable<decltype(simple_static_function_r_with_arg)>::value,
             "unit test fail");
     }
-    SECTION("is_invocable_members"){
+    SUBCASE("is_invocable_members"){
         static_assert(
             inv::is_invocable<decltype(&obj_t::member), obj_t>::value,
             "unit test fail");
@@ -229,7 +228,7 @@ TEST_CASE("is_invocable"){
             inv::is_invocable<decltype(&obj_t::member_r_with_arg), std::reference_wrapper<obj_t>, int>::value,
             "unit test fail");
     }
-    SECTION("is_not_invocable_members"){
+    SUBCASE("is_not_invocable_members"){
         static_assert(
             !inv::is_invocable<decltype(&obj_t::member)>::value,
             "unit test fail");
@@ -260,7 +259,7 @@ TEST_CASE("is_invocable"){
             !inv::is_invocable<decltype(&obj_t::member_r_with_arg), std::reference_wrapper<obj2_t>, int>::value,
             "unit test fail");
     }
-    SECTION("is_invocable_objects"){
+    SUBCASE("is_invocable_objects"){
         static_assert(
             inv::is_invocable<decltype(&obj_t::value), obj_t>::value,
             "unit test fail");
@@ -281,7 +280,7 @@ TEST_CASE("is_invocable"){
             inv::is_invocable<decltype(&obj_t::value_c), std::reference_wrapper<obj_t>>::value,
             "unit test fail");
     }
-    SECTION("is_not_invocable_objects"){
+    SUBCASE("is_not_invocable_objects"){
         static_assert(
             !inv::is_invocable<decltype(&obj_t::value)>::value,
             "unit test fail");
@@ -305,7 +304,7 @@ TEST_CASE("is_invocable"){
 }
 
 TEST_CASE("is_invocable_r"){
-    SECTION("is_invocable_r_functions"){
+    SUBCASE("is_invocable_r_functions"){
         static_assert(
             inv::is_invocable_r<void, decltype(simple_static_function)>::value,
             "unit test fail");
@@ -319,7 +318,7 @@ TEST_CASE("is_invocable_r"){
             inv::is_invocable_r<const int&, decltype(simple_static_function_r_with_arg), const int&>::value,
             "unit test fail");
     }
-    SECTION("is_not_invocable_r_functions"){
+    SUBCASE("is_not_invocable_r_functions"){
         static_assert(
             !inv::is_invocable_r<void, decltype(simple_static_function), int>::value,
             "unit test fail");
@@ -340,7 +339,7 @@ TEST_CASE("is_invocable_r"){
             !inv::is_invocable_r<obj_t, decltype(simple_static_function_r_with_arg), const int&>::value,
             "unit test fail");
     }
-    SECTION("is_invocable_r_members"){
+    SUBCASE("is_invocable_r_members"){
         static_assert(
             inv::is_invocable_r<void, decltype(&obj_t::member), obj_t>::value,
             "unit test fail");
@@ -377,7 +376,7 @@ TEST_CASE("is_invocable_r"){
             inv::is_invocable_r<void, decltype(&obj_t::member_r_with_arg), std::reference_wrapper<obj_t>, int>::value,
             "unit test fail");
     }
-    SECTION("is_not_invocable_r_members"){
+    SUBCASE("is_not_invocable_r_members"){
         static_assert(
             !inv::is_invocable_r<int, decltype(&obj_t::member), obj_t>::value,
             "unit test fail");
@@ -408,7 +407,7 @@ TEST_CASE("is_invocable_r"){
             !inv::is_invocable_r<int, decltype(&obj_t::member_r_with_arg), std::reference_wrapper<obj_t>, obj2_t>::value,
             "unit test fail");
     }
-    SECTION("is_invocable_r_objects"){
+    SUBCASE("is_invocable_r_objects"){
         static_assert(
             inv::is_invocable_r<int, decltype(&obj_t::value), obj_t>::value,
             "unit test fail");
@@ -435,7 +434,7 @@ TEST_CASE("is_invocable_r"){
             inv::is_invocable_r<void, decltype(&obj_t::value_c), std::reference_wrapper<obj_t>>::value,
             "unit test fail");
     }
-    SECTION("is_not_invocable_r_objects"){
+    SUBCASE("is_not_invocable_r_objects"){
         static_assert(
             !inv::is_invocable_r<obj_t, decltype(&obj_t::value), obj_t>::value,
             "unit test fail");
@@ -465,7 +464,7 @@ TEST_CASE("is_invocable_r"){
 }
 
 TEST_CASE("apply"){
-    SECTION("apply_functions"){
+    SUBCASE("apply_functions"){
         inv::apply(simple_static_function, std::make_tuple());
         REQUIRE(inv::apply(simple_static_function_r, std::make_tuple()) == 42);
         REQUIRE(inv::apply(simple_static_function_r_with_arg, std::make_tuple(42)) == 42);
@@ -474,7 +473,7 @@ TEST_CASE("apply"){
             REQUIRE(&inv::apply(simple_static_function_r_with_ref_arg, std::make_tuple(std::ref(v))) == &v);
         }
     }
-    SECTION("apply_members"){
+    SUBCASE("apply_members"){
         obj_t o;
 
         inv::apply(&obj_t::member, std::make_tuple(o));
@@ -496,7 +495,7 @@ TEST_CASE("apply"){
             REQUIRE(&inv::apply(&obj_t::member_r_with_ref_arg, std::make_tuple(std::ref(o), std::ref(v))) == &v);
         }
     }
-    SECTION("apply_member_objects"){
+    SUBCASE("apply_member_objects"){
         obj_t o;
 
         REQUIRE(inv::apply(&obj_t::value, std::make_tuple(o)) == 42);
